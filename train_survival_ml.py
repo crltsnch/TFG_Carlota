@@ -3,20 +3,14 @@ import pandas as pd
 import numpy as np
 import datetime
 import time
-
 import plotly.graph_objects as go
 import plotly.express as px
 import plotly.io as pio
 pio.templates.default = "plotly_white"
-
 from sksurv.functions import StepFunction
 from sksurv.nonparametric import kaplan_meier_estimator
 from sksurv.metrics import integrated_brier_score, brier_score
-
 import itertools
-    
-
-
 
 '''
 --------------------------------------------------------------------
