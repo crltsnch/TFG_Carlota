@@ -5,6 +5,11 @@ import datetime
 
 from sklearn.model_selection import train_test_split
 
+
+'''
+Divide el DataFrame df en entrenamiento y test, manteniendo las columnas necesarias (cols_x, censored, y col_target),
+y devuelve los datos listos para usar en modelos de supervivencia.
+'''
 def split_train_test(df, cols_x, col_target, test_size=0.3, col_stratify=None, random_state=None, dropna=True):
     Xy = df[cols_x+["censored", col_target]].dropna() if dropna else df[cols_x+["censored", col_target]]
 
