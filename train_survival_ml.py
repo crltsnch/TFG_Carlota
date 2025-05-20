@@ -15,8 +15,14 @@ from sksurv.metrics import integrated_brier_score, brier_score
 
 import itertools
     
-    
-    
+
+
+
+'''
+--------------------------------------------------------------------
+GRÁFICO DE BARRAS IMPORTANCIA DE CARACTERÍSTICAS
+--------------------------------------------------------------------
+'''    
 def plot_feat_imp(cols, coef):
     feat_importance = pd.DataFrame({
         "feature": cols,
@@ -35,7 +41,15 @@ def plot_feat_imp(cols, coef):
     )
     
     return feat_importance, fig
-    
+
+
+
+
+'''
+--------------------------------------------------------------------
+CALCULAR LA PUNTUACIÓN BRIER
+--------------------------------------------------------------------
+''' 
 def get_bier_score(df, y_train, y_test, survs, times, col_target = "duration", with_benchmark=True):
     
     if with_benchmark:
@@ -60,6 +74,13 @@ def get_bier_score(df, y_train, y_test, survs, times, col_target = "duration", w
     return scores
 
 
+
+
+'''
+--------------------------------------------------------------------
+CALCULAR EL BRIER SCORE EN CADA INSTANTE DE TIEMPO t ∈ times
+--------------------------------------------------------------------
+'''
 def get_bier_curve(y_train, y_test, survs, times):
     preds = {'estimator': np.row_stack([fn(times) for fn in survs])}
 
@@ -72,6 +93,18 @@ def get_bier_curve(y_train, y_test, survs, times):
     return scores
     
 
+
+'''
+----------------------------------------------------------------------------------------------
+ENTRENA EL MODELO EN UN FOLD Y DEVUELVE EL MODELO ENTRENADO Y EL SCORE DE VALIDACIÓN
+    estimator: El modelo de supervivencia (por ejemplo, CoxPHSurvivalAnalysis) sin entrenar aún.
+    Xy: DataFrame con todas las variables (cols), y además 'censored' y col_target (duration).
+    train_index: Índices de las filas que se usarán para entrenamiento (provenientes de un KFold)
+    test_index: Índices de las filas que se usarán para validación.
+    cols: Lista de columnas predictoras (variables X).
+    col_target: Nombre de la columna que contiene la duración del evento (por defecto "duration").
+----------------------------------------------------------------------------------------------
+'''
 def fit_score(estimator, Xy, train_index, test_index, cols, col_target):
     Xy_train = Xy.loc[train_index]
     Xy_test = Xy.loc[test_index]
@@ -91,6 +124,12 @@ def fit_score(estimator, Xy, train_index, test_index, cols, col_target):
     return estimator, score   
 
 
+
+'''
+----------------------------------------------------------------------------------------------
+EJECUTA VALIDACIÓN CRUZADA CON LOS HIPERPARAMETROS Y EL MODELO QUE LE PASEMOS 
+----------------------------------------------------------------------------------------------
+'''
 def cv_fit_score(df, cv, estimator_fn, cols, col_target, params, drop_zero = True, verbose = False):
     
     Xy = df[cols+["censored", col_target]].dropna().reset_index(drop=True)
@@ -121,6 +160,12 @@ def cv_fit_score(df, cv, estimator_fn, cols, col_target, params, drop_zero = Tru
     return estimator, cv_scores
 
 
+
+'''
+----------------------------------------------------------------------------------------------
+PROBAR TODAS LAS COMBINACIONES DE grid_params (tipo GridSearch) CON CV.
+----------------------------------------------------------------------------------------------
+'''
 def grid_search(grid_params, df, cv, estimator_fn, cols, col_target, verbose = False):
     
     best_score = -100
