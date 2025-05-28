@@ -11,7 +11,7 @@ st.title("🧠 Predicción de Riesgo Emocional en Pacientes Oncológicos")
 # === Cargar modelo y scaler ===
 @st.cache_resource
 def cargar_modelo_y_scaler():
-    modelo = joblib.load("Outputs/models_emo/gradient_boosting.pkl")
+    modelo = joblib.load("Outputs/models_emo/cox_ph.pkl")
     scaler = joblib.load("Outputs/data_emo/scaler.pkl")
     return modelo, scaler
 
@@ -352,22 +352,23 @@ if st.session_state.enviado:
 
 
     df = pd.DataFrame([datos])
-
     columnas_entrenamiento = joblib.load("Outputs/data_emo/columnas_modelo.pkl")
     df = df[columnas_entrenamiento]
-
-    # Escalar
     df_escalado = scaler.transform(df)
-
-    # Crear DataFrame con nombres de columnas
     df_escalado_named = pd.DataFrame(df_escalado, columns=columnas_entrenamiento)
 
     # Obtener función de riesgo acumulado
-    riesgo_funcs = modelo.predict_cumulative_hazard_function(df_escalado)
+    funciones_riesgo = modelo.predict_cumulative_hazard_function(df_escalado_named)
 
-    # Evaluar la función en el tiempo seleccionado
-    riesgo_en_t = riesgo_funcs[0](tiempo_riesgo)
+    # Extraer valor más próximo al tiempo ingresado
+    funcion_individual = funciones_riesgo[0]
+    tiempo_objetivo = tiempo_riesgo
 
-    # Mostrar resultados
+    if tiempo_objetivo <= funcion_individual.x[-1]:  # tiempo dentro del rango
+        riesgo_en_t = funcion_individual(tiempo_objetivo)
+    else:
+        riesgo_en_t = funcion_individual(funcion_individual.x[-1])  # último disponible
+
+    # Mostrar resultado
     st.success("✅ Predicción completada")
-    st.success(f"✅ Riesgo acumulado a los {tiempo_riesgo} días: {riesgo_en_t:.2%}")
+    st.metric(label=f"Riesgo acumulado a {tiempo_objetivo} días", value=f"{riesgo_en_t:.2%}")
