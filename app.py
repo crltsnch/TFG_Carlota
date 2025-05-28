@@ -17,6 +17,10 @@ def cargar_modelo_y_scaler():
 
 modelo, scaler = cargar_modelo_y_scaler()
 
+# === Inicializar estado ===
+if "enviado" not in st.session_state:
+    st.session_state.enviado = False
+
 # === Cargar todos los encoders ===
 @st.cache_resource
 def cargar_encoders():
@@ -262,13 +266,37 @@ with st.form("formulario_emocional"):
             days_to_birth_demographic = st.number_input("Días hasta el nacimiento (days_to_birth.demographic)", step=1)
             age_at_index_demographic = st.number_input("Edad en el índice (age_at_index.demographic)", step=1)
             days_to_diagnosis_diagnoses = st.number_input("Días desde el diagnóstico (days_to_diagnosis.diagnoses)", step=1)
+        
+        tiempo_riesgo = st.number_input("Tiempo (en días) para estimar el riesgo acumulado", min_value=1, value=365)
 
 
     enviado = st.form_submit_button("Predecir riesgo")
+    if enviado:
+        st.session_state.enviado = True
+
+# === Botón para resetear formulario ===
+if st.button("🔄 Resetear todo el formulario"):
+    for key in list(st.session_state.keys()):
+        if key.startswith("apoyo_") or key in [
+            "enviado", "responsabilidad", "neuroticismo", "extraversion", "amabilidad", "apertura",
+            "ansiedad", "depresion", "estres", "alcohol", "fuma_actual", "fue_fumador",
+            "alcohol_problema", "drogas_pasado", "drogas_ahora", "drogas_problema",
+            "ejercicio", "alimentacion", "disease_type", "primary_site", "gender_demographic",
+            "tissue_or_organ_of_origin_diagnoses", "primary_diagnosis_diagnoses", "prior_treatment_diagnoses",
+            "site_of_resection_or_biopsy_diagnoses", "treatment_type_treatments_diagnoses",
+            "treatment_or_therapy_treatments_diagnoses", "tumor_descriptor_samples",
+            "sample_type_samples", "tissue_type_samples", "tipo_cancer_TCGA", "tipo_cancer_general",
+            "morphology_diagnoses", "year_of_diagnosis_diagnoses", "age_at_diagnosis_diagnoses",
+            "year_of_birth_demographic", "days_to_birth_demographic", "age_at_index_demographic",
+            "days_to_diagnosis_diagnoses", "tiempo_riesgo"
+        ]:
+            del st.session_state[key]
+    st.rerun()
+
 
 # === Procesamiento y predicción ===
-if enviado:
-        # Calcular la puntuación total de apoyo
+if st.session_state.enviado:
+    # Calcular la puntuación total de apoyo
     suma_apoyo = sum(respuestas_apoyo)
     apoyo_valor = "Sí" if suma_apoyo >= 32 else "No"
     apoyo_cod = encoders["apoyo"].transform([apoyo_valor])[0]
@@ -325,13 +353,21 @@ if enviado:
 
     df = pd.DataFrame([datos])
 
+    columnas_entrenamiento = joblib.load("Outputs/data_emo/columnas_modelo.pkl")
+    df = df[columnas_entrenamiento]
+
     # Escalar
     df_escalado = scaler.transform(df)
 
-    # Predicción
-    pred = modelo.predict(df_escalado)[0]
-    proba = modelo.predict_proba(df_escalado)[0][1]  # Probabilidad clase positiva
+    # Crear DataFrame con nombres de columnas
+    df_escalado_named = pd.DataFrame(df_escalado, columns=columnas_entrenamiento)
+
+    # Obtener función de riesgo acumulado
+    riesgo_funcs = modelo.predict_cumulative_hazard_function(df_escalado)
+
+    # Evaluar la función en el tiempo seleccionado
+    riesgo_en_t = riesgo_funcs[0](tiempo_riesgo)
 
     # Mostrar resultados
-    st.success(f"✅ Riesgo predicho: {'ALTO' if pred == 1 else 'BAJO'}")
-    st.metric(label="Probabilidad de riesgo alto", value=f"{proba:.2%}")
+    st.success("✅ Predicción completada")
+    st.success(f"✅ Riesgo acumulado a los {tiempo_riesgo} días: {riesgo_en_t:.2%}")
