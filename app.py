@@ -358,17 +358,11 @@ if st.session_state.enviado:
     df_escalado_named = pd.DataFrame(df_escalado, columns=columnas_entrenamiento)
 
     # Obtener función de riesgo acumulado
-    funciones_riesgo = modelo.predict_cumulative_hazard_function(df_escalado_named)
+    funciones_riesgo = modelo.predict(df_escalado_named)
 
     # Extraer valor más próximo al tiempo ingresado
     funcion_individual = funciones_riesgo[0]
-    tiempo_objetivo = tiempo_riesgo
-
-    if tiempo_objetivo <= funcion_individual.x[-1]:  # tiempo dentro del rango
-        riesgo_en_t = funcion_individual(tiempo_objetivo)
-    else:
-        riesgo_en_t = funcion_individual(funcion_individual.x[-1])  # último disponible
 
     # Mostrar resultado
     st.success("✅ Predicción completada")
-    st.metric(label=f"Riesgo acumulado a {tiempo_objetivo} días", value=f"{riesgo_en_t:.2%}")
+    st.metric(label=f"Riesgo acumulado a días", value=f"{funcion_individual:.2%}")
