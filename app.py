@@ -70,7 +70,7 @@ with st.form("formulario_emocional"):
         estres = st.selectbox("Estrés", [0, 1, 2, 3])
 
         alcohol = st.selectbox("Consumo de alcohol", ["Nunca", "Ocasionalmente", "Frecuentemente"])
-        fuma_actual = st.selectbox("Fuma actualmente", ["No", "Sí, <5 cigarros/día", ">5 cigarros/día"])
+        fuma_actual = st.selectbox("Fuma actualmente", ["No", "Sí, <5 cigarros/día", "Sí, >5 cigarros/día"])
 
     with col2:
         fue_fumador = st.selectbox("Fue fumador", ["No", "Sí, en el pasado", "Sí, sigue siéndolo"])
