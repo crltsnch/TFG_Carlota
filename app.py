@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import joblib
 import os
+from datetime import date
 
 st.set_page_config(page_title="Predicción de Riesgo Emocional", layout="wide")
 
@@ -25,7 +26,6 @@ st.markdown("""
         font-size: 24pt !important;
         font-weight: bold !important;
     }
-    .block-container, .block-container * {
         font-size: 16pt !important;
     }
     .stSlider > label,
@@ -155,12 +155,13 @@ with st.form("formulario_emocional"):
     ejercicio = st.selectbox("¿Hace ejercicio regularmente?", ["No", "Sí"])
     alimentacion = st.selectbox("¿Sigue una dieta equilibrada y variada?", ["No", "Sí"])
 
+
     st.markdown("<br>", unsafe_allow_html=True)
 
     st.subheader("Las siguientes preguntas son cuestiones clínicas.")
     disease_type = st.selectbox("Tipo de enfermedad maligna, según la clasificación internacional de enfermedades oncológicas (CIE-O) de la Organización Mundial de la Salud (OMS). (disease_type)", ['Acinar Cell Neoplasms', 'Adenomas and Adenocarcinomas', 'Adnexal and Skin Appendage Neoplasms', 'Basal Cell Neoplasms', 'Complex Epithelial Neoplasms', 'Complex Mixed and Stromal Neoplasms', 'Cystic, Mucinous and Serous Neoplasms', 'Ductal and Lobular Neoplasms', 'Epithelial Neoplasms, NOS', 'Fibroepithelial Neoplasms', 'Fibromatous Neoplasms', 'Germ Cell Neoplasms', 'Gliomas', 'Lipomatous Neoplasms', 'Mature B-Cell Lymphomas', 'Mesothelial Neoplasms', 'Myeloid Leukemias', 'Myomatous Neoplasms', 'Nerve Sheath Tumors', 'Nevi and Melanomas', 'Paragangliomas and Glomus Tumors', 'Soft Tissue Tumors and Sarcomas, NOS', 'Squamous Cell Neoplasms', 'Synovial-like Neoplasms', 'Thymic Epithelial Neoplasms', 'Transitional Cell Papillomas and Carcinomas'])
 
-    primary_site = st.selectbox("localización primaria de la enfermedad, según la clasificación internacional de enfermedades oncológicas (CIE-O) de la Organización Mundial de la Salud (OMS). (primary_site)", ['Kidney', 'Bronchus and lung', 'Skin', 'Brain', 'Adrenal gland', 'Other and ill-defined sites', 'Retroperitoneum and peritoneum', 'Connective, subcutaneous and other soft tissues', 'Heart, mediastinum, and pleura', 'Other endocrine glands and related structures', 'Rectosigmoid junction', 'Rectum', 'Colon', 'Thyroid gland', 'Corpus uteri', 'Liver and intrahepatic bile ducts', 'Gallbladder', 'Prostate gland', 'Hypopharynx', 'Base of tongue', 'Larynx', 'Other and unspecified parts of tongue', 'Other and unspecified parts of mouth', 'Tonsil', 'Floor of mouth', 'Other and ill-defined sites in lip, oral cavity and pharynx', 'Gum', 'Palate', 'Oropharynx', 'Lip', 'Bones, joints and articular cartilage of other and unspecified sites', 'Breast', 'Testis', 'Esophagus', 'Stomach', 'Lymph nodes', 'Other and unspecified major salivary glands', 'Small intestine', 'Cervix uteri', 'Pancreas', 'Uterus, NOS', 'Hematopoietic and reticuloendothelial systems', 'Peripheral nerves and autonomic nervous system', 'Ovary', 'Meninges', 'Other and unspecified male genital organs', 'Bladder', 'Eye and adnexa', 'Thymus'])
+    primary_site = st.selectbox("Localización primaria de la enfermedad, según la clasificación internacional de enfermedades oncológicas (CIE-O) de la Organización Mundial de la Salud (OMS). (primary_site)", ['Kidney', 'Bronchus and lung', 'Skin', 'Brain', 'Adrenal gland', 'Other and ill-defined sites', 'Retroperitoneum and peritoneum', 'Connective, subcutaneous and other soft tissues', 'Heart, mediastinum, and pleura', 'Other endocrine glands and related structures', 'Rectosigmoid junction', 'Rectum', 'Colon', 'Thyroid gland', 'Corpus uteri', 'Liver and intrahepatic bile ducts', 'Gallbladder', 'Prostate gland', 'Hypopharynx', 'Base of tongue', 'Larynx', 'Other and unspecified parts of tongue', 'Other and unspecified parts of mouth', 'Tonsil', 'Floor of mouth', 'Other and ill-defined sites in lip, oral cavity and pharynx', 'Gum', 'Palate', 'Oropharynx', 'Lip', 'Bones, joints and articular cartilage of other and unspecified sites', 'Breast', 'Testis', 'Esophagus', 'Stomach', 'Lymph nodes', 'Other and unspecified major salivary glands', 'Small intestine', 'Cervix uteri', 'Pancreas', 'Uterus, NOS', 'Hematopoietic and reticuloendothelial systems', 'Peripheral nerves and autonomic nervous system', 'Ovary', 'Meninges', 'Other and unspecified male genital organs', 'Bladder', 'Eye and adnexa', 'Thymus'])
 
     gender_demographic = st.selectbox("Género (gender.demographic)", ['female', 'male'])
 
@@ -336,10 +337,17 @@ with st.form("formulario_emocional"):
                                                                             ])
 
     year_of_diagnosis_diagnoses = st.number_input("Año del diagnóstico (year_of_diagnosis.diagnoses)", step=1)
-    age_at_diagnosis_diagnoses = st.number_input("Edad en el diagnóstico (age_at_diagnosis.diagnoses)", step=1)
+    age_at_diagnosis_diagnoses = st.number_input("Días desde el diagnóstico (age_at_diagnosis.diagnoses)", step=1)
     year_of_birth_demographic = st.number_input("Año de nacimiento (year_of_birth.demographic)", step=1)
     days_to_birth_demographic = st.number_input("Días desde el nacimiento (days_to_birth.demographic)", step=1)
     age_at_index_demographic = st.number_input("Edad al recoger la muestra (age_at_index.demographic)", step=1)
+    fecha_nacimiento = st.date_input("📅 Fecha de nacimiento")
+
+    # Calcular diferencia en días
+    fecha_actual = date.today()
+    dias_diagnostico = (fecha_actual - fecha_nacimiento).days
+
+    dias_nacimiento = (fecha_nacimiento - fecha_actual).days
 
 
     enviado = st.form_submit_button("Predecir riesgo")
@@ -405,9 +413,9 @@ if st.session_state.enviado:
 
         # Numéricas (sin codificar)
         "year_of_diagnosis.diagnoses": year_of_diagnosis_diagnoses,
-        "age_at_diagnosis.diagnoses": age_at_diagnosis_diagnoses,
+        "age_at_diagnosis.diagnoses": dias_diagnostico,
         "year_of_birth.demographic": year_of_birth_demographic,
-        "days_to_birth.demographic": days_to_birth_demographic,
+        "days_to_birth.demographic": días_nacimiento,
         "age_at_index.demographic": age_at_index_demographic,
 
         # Rasgos personales
