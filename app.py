@@ -221,7 +221,7 @@ def formulario_paciente(nombre):
         alcohol_problema = st.selectbox("¿Ha tenido problemas por consumo de alcohol?", ["No", "Sí, en el pasado", "Sí, sigue teniendo actualmente"])
         drogas_pasado = st.selectbox("¿Ha consumido sustancias ilegales alguna vez?", ["No", "Ocasionalmente", "Frecuentemente"])
         drogas_ahora = st.selectbox("¿Acutalmente, consume alguna sustancia sin prescripción médica son fines recreativos?", ["No", "Ocasionalmente", "Habitualmente"])
-        drogas_problema = st.selectbox("¿Ha tenido tratamiento por consumo problemçatico de drogas en algún momento?", ["No", "Sí"])
+        drogas_problema = st.selectbox("¿Ha tenido tratamiento por consumo problemático de drogas en algún momento?", ["No", "Sí"])
 
         ejercicio = st.selectbox("¿Hace ejercicio regularmente?", ["No", "Sí"])
         alimentacion = st.selectbox("¿Sigue una dieta equilibrada y variada?", ["No", "Sí"])
