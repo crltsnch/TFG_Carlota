@@ -427,7 +427,7 @@ def formulario_paciente(nombre):
 
         suma_apoyo = sum(respuestas_apoyo)
         apoyo_valor = "Sí" if suma_apoyo >= 32 else "No"
-        apoyo_cod = encoders["apoyo"].transform([[apoyo_valor]])[0][0]
+        apoyo_cod = encoders["apoyo"].transform([apoyo_valor])[0]
 
         st.form_submit_button("Guardar respuestas")
 
@@ -449,15 +449,15 @@ def formulario_paciente(nombre):
                 "tipo_cancer_TCGA": encoders["tipo_cancer_TCGA"].transform([tipo_cancer_TCGA])[0],
                 "tipo_cancer_general": encoders["tipo_cancer_general"].transform([tipo_cancer_general])[0],
                 "apoyo": apoyo_cod,
-                "alcohol": encoders["alcohol"].transform([[alcohol]])[0][0],
-                "fuma_actual": encoders["fuma_actual"].transform([[fuma_actual]])[0][0],
-                "fue_fumador": encoders["fue_fumador"].transform([[fue_fumador]])[0][0],
-                "alcohol_problema": encoders["alcohol_problema"].transform([[alcohol_problema]])[0][0],
-                "drogas_pasado": encoders["drogas_pasado"].transform([[drogas_pasado]])[0][0],
-                "drogas_ahora": encoders["drogas_ahora"].transform([[drogas_ahora]])[0][0],
-                "drogas_problema": encoders["drogas_problema"].transform([[drogas_problema]])[0][0],
-                "ejercicio": encoders["ejercicio"].transform([[ejercicio]])[0][0],
-                "alimentacion": encoders["alimentacion"].transform([[alimentacion]])[0][0],
+                "alcohol": encoders["alcohol"].transform([alcohol])[0],
+                "fuma_actual": encoders["fuma_actual"].transform([fuma_actual])[0],
+                "fue_fumador": encoders["fue_fumador"].transform([fue_fumador])[0],
+                "alcohol_problema": encoders["alcohol_problema"].transform([alcohol_problema])[0],
+                "drogas_pasado": encoders["drogas_pasado"].transform([drogas_pasado])[0],
+                "drogas_ahora": encoders["drogas_ahora"].transform([drogas_ahora])[0],
+                "drogas_problema": encoders["drogas_problema"].transform([drogas_problema])[0],
+                "ejercicio": encoders["ejercicio"].transform([ejercicio])[0],
+                "alimentacion": encoders["alimentacion"].transform([alimentacion])[0],
 
                 # Numéricas (sin codificar)
                 "year_of_diagnosis.diagnoses": year_of_diagnosis_diagnoses,
