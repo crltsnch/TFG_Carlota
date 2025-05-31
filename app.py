@@ -419,7 +419,7 @@ def formulario_paciente(nombre):
 
 
         # Calcular diferencia en días
-        fecha_actual = datetime.datetime.today().date()
+        fecha_actual = datetime.date(2007, 5, 31)
 
         dias_diagnostico = (fecha_actual - fecha_nacimiento).days
 
@@ -427,7 +427,7 @@ def formulario_paciente(nombre):
 
         suma_apoyo = sum(respuestas_apoyo)
         apoyo_valor = "Sí" if suma_apoyo >= 32 else "No"
-        apoyo_cod = encoders["apoyo"].transform([apoyo_valor])[0]
+        apoyo_cod = encoders["apoyo"].transform([[apoyo_valor]])[0][0]
 
         st.form_submit_button("Guardar respuestas")
 
@@ -449,15 +449,15 @@ def formulario_paciente(nombre):
                 "tipo_cancer_TCGA": encoders["tipo_cancer_TCGA"].transform([tipo_cancer_TCGA])[0],
                 "tipo_cancer_general": encoders["tipo_cancer_general"].transform([tipo_cancer_general])[0],
                 "apoyo": apoyo_cod,
-                "alcohol": encoders["alcohol"].transform([alcohol])[0],
-                "fuma_actual": encoders["fuma_actual"].transform([fuma_actual])[0],
-                "fue_fumador": encoders["fue_fumador"].transform([fue_fumador])[0],
-                "alcohol_problema": encoders["alcohol_problema"].transform([alcohol_problema])[0],
-                "drogas_pasado": encoders["drogas_pasado"].transform([drogas_pasado])[0],
-                "drogas_ahora": encoders["drogas_ahora"].transform([drogas_ahora])[0],
-                "drogas_problema": encoders["drogas_problema"].transform([drogas_problema])[0],
-                "ejercicio": encoders["ejercicio"].transform([ejercicio])[0],
-                "alimentacion": encoders["alimentacion"].transform([alimentacion])[0],
+                "alcohol": encoders["alcohol"].transform([[alcohol]])[0][0],
+                "fuma_actual": encoders["fuma_actual"].transform([[fuma_actual]])[0][0],
+                "fue_fumador": encoders["fue_fumador"].transform([[fue_fumador]])[0][0],
+                "alcohol_problema": encoders["alcohol_problema"].transform([[alcohol_problema]])[0][0],
+                "drogas_pasado": encoders["drogas_pasado"].transform([[drogas_pasado]])[0][0],
+                "drogas_ahora": encoders["drogas_ahora"].transform([[drogas_ahora]])[0][0],
+                "drogas_problema": encoders["drogas_problema"].transform([[drogas_problema]])[0][0],
+                "ejercicio": encoders["ejercicio"].transform([[ejercicio]])[0][0],
+                "alimentacion": encoders["alimentacion"].transform([[alimentacion]])[0][0],
 
                 # Numéricas (sin codificar)
                 "year_of_diagnosis.diagnoses": year_of_diagnosis_diagnoses,
@@ -500,20 +500,22 @@ if st.button("Predecir riesgo emocional"):
     df_scaled_np = scaler.transform(df)
     df_scaled = pd.DataFrame(df_scaled_np, columns=columnas_modelo)
 
-    riesgos_log = modelo.predict(df_scaled)
-    print(riesgos_log)
-    riesgos = np.exp(riesgos_log)
+    log_hazard = modelo.predict(df_scaled)
+    print("Log hazard:", log_hazard)
 
-    st.subheader("Resultados")
-    st.write(f"🔹 Riesgo Paciente 1: {riesgos[0]:.2f}")
-    st.write(f"🔹 Riesgo Paciente 2: {riesgos[1]:.2f}")
+    hazard_ratio = np.exp(log_hazard)
+    print("Hazard ratio:", hazard_ratio[0], hazard_ratio[1])
 
-    if riesgos[0] > riesgos[1]:
-        st.markdown("## 🔴 El Paciente 1 tiene mayor riesgo emocional.")
-    elif riesgos[1] > riesgos[0]:
-        st.markdown("## 🔴 El Paciente 2 tiene mayor riesgo emocional.")
+    st.markdown(f"## El Paciente 1: {hazard_ratio[0]}")
+    st.markdown(f"## El Paciente 2: {hazard_ratio[1]}")
+    st.subheader("Resultado")
+
+    if hazard_ratio[0] > hazard_ratio[1]:
+        st.markdown("## El Paciente 1 tiene mayor riesgo emocional.")
+    elif hazard_ratio[1] > hazard_ratio[0]:
+        st.markdown("## El Paciente 2 tiene mayor riesgo emocional.")
     else:
-        st.markdown("## 🟡 Ambos pacientes tienen el mismo riesgo emocional.")
+        st.markdown("## Ambos pacientes tienen el mismo riesgo emocional.")
 
 
 
