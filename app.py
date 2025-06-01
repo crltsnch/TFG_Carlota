@@ -498,9 +498,9 @@ if st.button("Evaluar"):
     hazard_ratio = np.exp(log_hazard)
     print("Hazard ratio:", hazard_ratio[0], hazard_ratio[1])
 
-    st.markdown(f"## El Paciente 1: {hazard_ratio[0]}")
-    st.markdown(f"## El Paciente 2: {hazard_ratio[1]}")
-    st.subheader("Resultado")
+    # st.markdown(f"## El Paciente 1: {hazard_ratio[0]}")
+    # st.markdown(f"## El Paciente 2: {hazard_ratio[1]}")
+    # st.subheader("Resultado")
 
     if hazard_ratio[0] > hazard_ratio[1]:
         st.markdown("## El Paciente 1 tiene mayor riesgo emocional.")
