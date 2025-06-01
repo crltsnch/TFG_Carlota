@@ -45,7 +45,7 @@ pandas==2.2.3
 parso==0.8.4
 pexpect==4.9.0
 pillow==11.2.1
-pkgutil_resolve_name @ file:///home/conda/feedstock_root/build_artifacts/pkgutil-resolve-name_1733344503739/work
+pkgutil_resolve_name
 platformdirs==4.3.8
 plotly==6.1.2
 prompt_toolkit==3.0.51
