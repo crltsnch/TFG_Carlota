@@ -8,13 +8,6 @@ import base64
 
 st.set_page_config(page_title="Predicción de Riesgo Clínico-Emocional en Pacientes Oncológicos", layout="wide")
 
-def get_base64_image(path):
-    with open(path, "rb") as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
-
-img_b64 = get_base64_image("fondo.png")
-
 st.markdown(f"""
 <style>
     /* Contenedor principal */
