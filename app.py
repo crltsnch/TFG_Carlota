@@ -6,7 +6,7 @@ import os
 import datetime
 import base64
 
-st.set_page_config(page_title="Predicción de Riesgo Emocional", layout="wide")
+st.set_page_config(page_title="Predicción de Riesgo Clínico-Emocional en Pacientes Oncológicos", layout="wide")
 
 def get_base64_image(path):
     with open(path, "rb") as f:
@@ -141,7 +141,7 @@ st.markdown(f"""
     """, unsafe_allow_html=True)
 
 
-st.title("Predicción de Riesgo Emocional en Pacientes Oncológicos")
+st.title("Predicción de Riesgo Clínico-Emocional en Pacientes Oncológicos")
 
 # === Cargar modelo y scaler ===
 @st.cache_resource
@@ -175,15 +175,16 @@ def formulario_paciente(nombre):
     # === Formulario ===
     with st.form(f"formulario_emocional_{nombre}"):
         st.markdown('<h2 class="h2">Las siguientes preguntas miden el apoyo emocional percibido por el paciente.</h2>', unsafe_allow_html=True)
+        st.markdown('<h2 class="h2">1: Mucho menos de lo que desea, 2: Menos de lo que desea, 3: Ni mucho ni poco, 4: Casi como desea, 5: Tanto como desea</h2>', unsafe_allow_html=True)
         preguntas_apoyo = [
-            "Recibe visitas de mis amigos y familiares.",
-            "Recibe ayuda en asuntos relacionados con mi casa",
-            "Recibe elogios y reconocimientos cuando hago bien mi trabajo",
-            "Cuenta con personas que se preocupan de lo que me sucede",
-            "Recibe amor y afecto",
-            "Tiene la posibilidad de hablar con alguien de mis problemas personales",
-            "Tiene la posibilidad de hablar con alguien de mis problemas en el trabajo o en la casa.",
-            "Tiene la posibilidad de hablar con alguien de mis problemas económicos.",
+            "Recibe visitas de sus amigos y familiares.",
+            "Recibe ayuda en asuntos relacionados con su casa.",
+            "Recibe elogios y reconocimientos cuando hace bien su trabajo.",
+            "Cuenta con personas que se preocupan de lo que le sucede.",
+            "Recibe amor y afecto.",
+            "Tiene la posibilidad de hablar con alguien de sus problemas personales",
+            "Tiene la posibilidad de hablar con alguien de sus problemas en el trabajo o en la casa.",
+            "Tiene la posibilidad de hablar con alguien de sus problemas económicos.",
             "Recibe invitaciones para distraerse y salir con otras personas.",
             "Recibe consejos útiles cuando le ocurre algún acontecimiento importante.",
             "Recibe ayuda cuando está enfermo.",
@@ -197,11 +198,11 @@ def formulario_paciente(nombre):
         st.markdown("<br>", unsafe_allow_html=True)
 
         st.markdown('<h2 class="h2">Las siguientes preguntas se refieren a la personalidad del paciente, elija del 1 (nada) al 5 (mucho).</h2>', unsafe_allow_html=True)
-        responsabilidad = st.slider("Responsabilidad: Es responsable y organizado", 1, 5, 3)
-        neuroticismo = st.slider("Neuroticismo: Es tranquilo y emocionalmente estable", 1, 5, 3)
-        extraversion = st.slider("Extraversión: Es extrovertido y sociable", 1, 5, 3)
-        amabilidad = st.slider("Amabilidad: Es amable y coopertivo", 1, 5, 3)
-        apertura = st.slider("Apertura: Es abierto hacia nuevas experiencias", 1, 5, 3)
+        responsabilidad = st.slider("Responsabilidad: Es responsable y organizado.", 1, 5, 3)
+        neuroticismo = st.slider("Neuroticismo: Es intranquilo y emocionalmente inestable.", 1, 5, 3)
+        extraversion = st.slider("Extraversión: Es extrovertido y sociable.", 1, 5, 3)
+        amabilidad = st.slider("Amabilidad: Es amable y cooperativo.", 1, 5, 3)
+        apertura = st.slider("Apertura: Es abierto hacia nuevas experiencias.", 1, 5, 3)
 
         st.markdown("<br>", unsafe_allow_html=True)
 
@@ -220,7 +221,7 @@ def formulario_paciente(nombre):
         fue_fumador = st.selectbox("¿Ha sido fumador en el pasado?", ["No", "Sí, en el pasado", "Sí, sigue siéndolo"])
         alcohol_problema = st.selectbox("¿Ha tenido problemas por consumo de alcohol?", ["No", "Sí, en el pasado", "Sí, sigue teniendo actualmente"])
         drogas_pasado = st.selectbox("¿Ha consumido sustancias ilegales alguna vez?", ["No", "Ocasionalmente", "Frecuentemente"])
-        drogas_ahora = st.selectbox("¿Acutalmente, consume alguna sustancia sin prescripción médica son fines recreativos?", ["No", "Ocasionalmente", "Habitualmente"])
+        drogas_ahora = st.selectbox("¿Actualmente, consume alguna sustancia sin prescripción médica son fines recreativos?", ["No", "Ocasionalmente", "Habitualmente"])
         drogas_problema = st.selectbox("¿Ha tenido tratamiento por consumo problemático de drogas en algún momento?", ["No", "Sí"])
 
         ejercicio = st.selectbox("¿Hace ejercicio regularmente?", ["No", "Sí"])
@@ -230,13 +231,13 @@ def formulario_paciente(nombre):
         st.markdown("<br>", unsafe_allow_html=True)
 
         st.markdown('<h2 class="h2">Las siguientes preguntas son cuestiones clínicas.', unsafe_allow_html=True)
-        disease_type = st.selectbox("Tipo de enfermedad maligna, según la clasificación internacional de enfermedades oncológicas (CIE-O) de la Organización Mundial de la Salud (OMS). (disease_type)", ['Acinar Cell Neoplasms', 'Adenomas and Adenocarcinomas', 'Adnexal and Skin Appendage Neoplasms', 'Basal Cell Neoplasms', 'Complex Epithelial Neoplasms', 'Complex Mixed and Stromal Neoplasms', 'Cystic, Mucinous and Serous Neoplasms', 'Ductal and Lobular Neoplasms', 'Epithelial Neoplasms, NOS', 'Fibroepithelial Neoplasms', 'Fibromatous Neoplasms', 'Germ Cell Neoplasms', 'Gliomas', 'Lipomatous Neoplasms', 'Mature B-Cell Lymphomas', 'Mesothelial Neoplasms', 'Myeloid Leukemias', 'Myomatous Neoplasms', 'Nerve Sheath Tumors', 'Nevi and Melanomas', 'Paragangliomas and Glomus Tumors', 'Soft Tissue Tumors and Sarcomas, NOS', 'Squamous Cell Neoplasms', 'Synovial-like Neoplasms', 'Thymic Epithelial Neoplasms', 'Transitional Cell Papillomas and Carcinomas'])
+        disease_type = st.selectbox("Tipo de enfermedad maligna, según la clasificación internacional de enfermedades oncológicas (CIE-O) de la Organización Mundial de la Salud (OMS).", ['Acinar Cell Neoplasms', 'Adenomas and Adenocarcinomas', 'Adnexal and Skin Appendage Neoplasms', 'Basal Cell Neoplasms', 'Complex Epithelial Neoplasms', 'Complex Mixed and Stromal Neoplasms', 'Cystic, Mucinous and Serous Neoplasms', 'Ductal and Lobular Neoplasms', 'Epithelial Neoplasms, NOS', 'Fibroepithelial Neoplasms', 'Fibromatous Neoplasms', 'Germ Cell Neoplasms', 'Gliomas', 'Lipomatous Neoplasms', 'Mature B-Cell Lymphomas', 'Mesothelial Neoplasms', 'Myeloid Leukemias', 'Myomatous Neoplasms', 'Nerve Sheath Tumors', 'Nevi and Melanomas', 'Paragangliomas and Glomus Tumors', 'Soft Tissue Tumors and Sarcomas, NOS', 'Squamous Cell Neoplasms', 'Synovial-like Neoplasms', 'Thymic Epithelial Neoplasms', 'Transitional Cell Papillomas and Carcinomas'])
 
-        primary_site = st.selectbox("Localización primaria de la enfermedad, según la clasificación internacional de enfermedades oncológicas (CIE-O) de la Organización Mundial de la Salud (OMS). (primary_site)", ['Kidney', 'Bronchus and lung', 'Skin', 'Brain', 'Adrenal gland', 'Other and ill-defined sites', 'Retroperitoneum and peritoneum', 'Connective, subcutaneous and other soft tissues', 'Heart, mediastinum, and pleura', 'Other endocrine glands and related structures', 'Rectosigmoid junction', 'Rectum', 'Colon', 'Thyroid gland', 'Corpus uteri', 'Liver and intrahepatic bile ducts', 'Gallbladder', 'Prostate gland', 'Hypopharynx', 'Base of tongue', 'Larynx', 'Other and unspecified parts of tongue', 'Other and unspecified parts of mouth', 'Tonsil', 'Floor of mouth', 'Other and ill-defined sites in lip, oral cavity and pharynx', 'Gum', 'Palate', 'Oropharynx', 'Lip', 'Bones, joints and articular cartilage of other and unspecified sites', 'Breast', 'Testis', 'Esophagus', 'Stomach', 'Lymph nodes', 'Other and unspecified major salivary glands', 'Small intestine', 'Cervix uteri', 'Pancreas', 'Uterus, NOS', 'Hematopoietic and reticuloendothelial systems', 'Peripheral nerves and autonomic nervous system', 'Ovary', 'Meninges', 'Other and unspecified male genital organs', 'Bladder', 'Eye and adnexa', 'Thymus'])
+        primary_site = st.selectbox("Localización primaria de la enfermedad, según la clasificación internacional de enfermedades oncológicas (CIE-O) de la Organización Mundial de la Salud (OMS).", ['Kidney', 'Bronchus and lung', 'Skin', 'Brain', 'Adrenal gland', 'Other and ill-defined sites', 'Retroperitoneum and peritoneum', 'Connective, subcutaneous and other soft tissues', 'Heart, mediastinum, and pleura', 'Other endocrine glands and related structures', 'Rectosigmoid junction', 'Rectum', 'Colon', 'Thyroid gland', 'Corpus uteri', 'Liver and intrahepatic bile ducts', 'Gallbladder', 'Prostate gland', 'Hypopharynx', 'Base of tongue', 'Larynx', 'Other and unspecified parts of tongue', 'Other and unspecified parts of mouth', 'Tonsil', 'Floor of mouth', 'Other and ill-defined sites in lip, oral cavity and pharynx', 'Gum', 'Palate', 'Oropharynx', 'Lip', 'Bones, joints and articular cartilage of other and unspecified sites', 'Breast', 'Testis', 'Esophagus', 'Stomach', 'Lymph nodes', 'Other and unspecified major salivary glands', 'Small intestine', 'Cervix uteri', 'Pancreas', 'Uterus, NOS', 'Hematopoietic and reticuloendothelial systems', 'Peripheral nerves and autonomic nervous system', 'Ovary', 'Meninges', 'Other and unspecified male genital organs', 'Bladder', 'Eye and adnexa', 'Thymus'])
 
-        gender_demographic = st.selectbox("Género (gender.demographic)", ['female', 'male'])
+        gender_demographic = st.selectbox("Género", ['female', 'male'])
 
-        tissue_or_organ_of_origin_diagnoses = st.selectbox("Sitio anatómico de origen de la enfermedad maligna del paciente, según lo describe la Clasificación Internacional de Enfermedades Oncológicas (CIE-O) de la Organización Mundial de la Salud (OMS). (tissue_or_organ_of_origin.diagnoses)", [
+        tissue_or_organ_of_origin_diagnoses = st.selectbox("Sitio anatómico de origen de la enfermedad maligna del paciente, según lo describe la Clasificación Internacional de Enfermedades Oncológicas (CIE-O) de la Organización Mundial de la Salud (OMS).", [
                                                                                                                                 "Kidney, NOS", "Lower lobe, lung", "Upper lobe, lung", "Overlapping lesion of lung", "Middle lobe, lung", "Lung, NOS", "Main bronchus", "Skin, NOS", "Cerebrum", "Brain, NOS",
                                                                                                                                 "Temporal lobe", "Frontal lobe", "Occipital lobe", "Parietal lobe", "Adrenal gland, NOS", "Head, face or neck, NOS", "Retroperitoneum", "Connective, subcutaneous and other soft tissues of trunk, NOS", 
                                                                                                                                 "Connective, subcutaneous and other soft tissues of abdomen", "Connective, subcutaneous and other soft tissues of thorax", "Medulla of adrenal gland", "Thorax, NOS", "Mediastinum, NOS", 
@@ -258,7 +259,7 @@ def formulario_paciente(nombre):
                                                                                                                                 "Fundus of stomach", "Gastric antrum", "Body of stomach", "Ciliary body", "Choroid", "Overlapping lesion of eye and adnexa", "Thymus"
                                                                                                                             ])
 
-        primary_diagnosis_diagnoses = st.selectbox("Diagnóstico histológico principal del paciente, tal como lo describe la Clasificación Internacional de Enfermedades para Oncología (ICD-O) de la Organización Mundial de la Salud (OMS). (primary_diagnosis.diagnoses)", [
+        primary_diagnosis_diagnoses = st.selectbox("Diagnóstico histológico principal del paciente, tal como lo describe la Clasificación Internacional de Enfermedades para Oncología (ICD-O) de la Organización Mundial de la Salud (OMS).", [
                                                                                                             'Clear cell adenocarcinoma, NOS', 'Renal cell carcinoma, NOS', 'Adenocarcinoma, NOS',
                                                                                                             'Solid carcinoma, NOS', 'Acinar cell carcinoma', 'Adenocarcinoma with mixed subtypes',
                                                                                                             'Bronchiolo-alveolar carcinoma, non-mucinous', 'Papillary adenocarcinoma, NOS',
@@ -318,9 +319,9 @@ def formulario_paciente(nombre):
                                                                                                             'Thymoma, type B3, malignant', 'Thymoma, type B1, NOS', 'Thymoma, type A, NOS'
                                                                                                         ])
 
-        prior_treatment_diagnoses = st.selectbox("¿Ha recibido tratamiento previo antes de que se tomara la muestra de tumor? (prior_treatment.diagnoses)", ['Yes', 'No'])
+        prior_treatment_diagnoses = st.selectbox("¿Ha recibido tratamiento previo antes de que se tomara la muestra de tumor?", ['Yes', 'No'])
 
-        site_of_resection_or_biopsy_diagnoses = st.selectbox("Sitio anatómico de origen de la enfermedad maligna del paciente, según lo descrito por la Clasificación Internacional de Enfermedades Oncológicas (CIE-O) de la Organización Mundial de la Salud (OMS). (site_of_resection_or_biopsy.diagnoses)", [
+        site_of_resection_or_biopsy_diagnoses = st.selectbox("Sitio anatómico de origen de la enfermedad maligna del paciente, según lo descrito por la Clasificación Internacional de Enfermedades Oncológicas (CIE-O) de la Organización Mundial de la Salud (OMS).", [
                                                                                                                                     "Kidney, NOS", "Lower lobe, lung", "Upper lobe, lung",
                                                                                                                                     "Overlapping lesion of lung", "Middle lobe, lung", "Lung, NOS",
                                                                                                                                     "Main bronchus", "Lymph nodes of head, face and neck", "Skin, NOS",
@@ -361,24 +362,24 @@ def formulario_paciente(nombre):
                                                                                                                                     "Fundus of stomach", "Gastric antrum", "Body of stomach", "Ciliary body", "Choroid", "Overlapping lesion of eye and adnexa","Thymus"
                                                                                                                                     ])
 
-        treatment_type_treatments_diagnoses = st.selectbox("Tipo de tratamiento administrado. (treatment_type.treatments.diagnoses)", ["['Pharmaceutical Therapy, NOS', 'Radiation Therapy, NOS']", "['Radiation Therapy, NOS', 'Pharmaceutical Therapy, NOS']"])
+        treatment_type_treatments_diagnoses = st.selectbox("Tipo de tratamiento que se le desea administrar.", ["['Pharmaceutical Therapy, NOS', 'Radiation Therapy, NOS']", "['Radiation Therapy, NOS', 'Pharmaceutical Therapy, NOS']"])
 
-        treatment_or_therapy_treatments_diagnoses = st.selectbox("¿El paciente ha recibido algún tratamiento de los anteriores anteriormente?. (treatment_or_therapy.treatments.diagnoses)", ["['no', 'no']", "['not reported', 'not reported']", "['no', 'yes']", "['yes', 'yes']", "['yes', 'no']", "['not reported', 'no']", "['no', 'not reported']", "['yes', 'not reported']", "['not reported', 'yes']"])
+        treatment_or_therapy_treatments_diagnoses = st.selectbox("¿El paciente ha recibido algún tratamiento de los anteriores anteriormente?", ["['no', 'no']", "['not reported', 'not reported']", "['no', 'yes']", "['yes', 'yes']", "['yes', 'no']", "['not reported', 'no']", "['no', 'not reported']", "['yes', 'not reported']", "['not reported', 'yes']"])
 
-        tumor_descriptor_samples = st.selectbox("Tipo de enfermedad presente en la muestra de tumor en relación con un punto temporal específico. (tumor_descriptor.samples)", ['Primary', 'Not Applicable', 'New Primary', 'Recurrence', 'Metastatic'])
+        tumor_descriptor_samples = st.selectbox("Tipo de enfermedad presente en la muestra de tumor en relación con un punto temporal específico.", ['Primary', 'Not Applicable', 'New Primary', 'Recurrence', 'Metastatic'])
 
-        sample_type_samples = st.selectbox("Tipo de muestra evaluada (sample_type.samples)", ['Primary Tumor', 'Solid Tissue Normal', 'Additional - New Primary', 'Recurrent Tumor', 'Metastatic', 'Additional Metastatic', 'Primary Blood Derived Cancer - Peripheral Blood'])
+        sample_type_samples = st.selectbox("Tipo de muestra evaluada.", ['Primary Tumor', 'Solid Tissue Normal', 'Additional - New Primary', 'Recurrent Tumor', 'Metastatic', 'Additional Metastatic', 'Primary Blood Derived Cancer - Peripheral Blood'])
 
-        tissue_type_samples = st.selectbox("Tipo de tejido (tissue_type.samples)", ['Tumor', 'Normal'])
+        tissue_type_samples = st.selectbox("Tipo de tejido evaluado.", ['Tumor', 'Normal'])
 
-        tipo_cancer_TCGA = st.selectbox("Tipo de cáncer según el programa TCGA (tipo_cancer_TCGA)", [
+        tipo_cancer_TCGA = st.selectbox("Tipo de cáncer según el programa TCGA.", [
             "KIRC", "LUAD", "SKCM", "LGG", "PCPG", "READ", "LUSC", "THCA", "UCEC", "CHOL",
             "KICH", "KIRP", "PRAD", "HNSC", "BRCA", "TGCT", "ESCA", "DLBC", "CESC", "PAAD",
             "MESO", "LIHC", "ACC", "COAD", "UCS", "GBM", "LAML", "SARC", "BLCA", "STAD",
             "OV", "UVM", "THYM"
         ])
 
-        tipo_cancer_general = st.selectbox("Tipo de cáncer (tipo_cancer_general)", [
+        tipo_cancer_general = st.selectbox("Tipo de cáncer.", [
             "Riñón", "Pulmón", "Melanoma cutáneo", "Cerebro", "Feocromocitoma y paraganglioma", "Recto", "Tiroides",
             "Endometrio", "Vías biliares", "Próstata", "Cabeza y cuello", "Mama", "Testículo", "Esófago",
             "Linfoma B difuso", "Cuello uterino", "Páncreas", "Mesotelioma", "Hígado", "Corteza adrenal",
@@ -387,7 +388,7 @@ def formulario_paciente(nombre):
         ])
 
 
-        morphology_diagnoses = st.selectbox("Morfología del tumor según la ICD-O-3 (Clasificación Internacional de Enfermedades para Oncología, 3ª edición) (morphology.diagnoses)", [
+        morphology_diagnoses = st.selectbox("Morfología del tumor según la ICD-O-3 (Clasificación Internacional de Enfermedades para Oncología, 3ª edición).", [
                                                                                     '8310/3', '8312/3', '8140/3', '8230/3', '8550/3', '8255/3', '8252/3', '8260/3',
                                                                                     '8480/3', '8250/3', '8265/3', '8253/3', '8720/3', '8772/3', '8730/3', '8721/3',
                                                                                     '8743/3', '8771/3', '8742/3', '8770/3', '8744/3', '9451/3', '9382/3', '9400/3',
@@ -407,11 +408,11 @@ def formulario_paciente(nombre):
                                                                                     '8581/1'
                                                                                 ])
 
-        year_of_diagnosis_diagnoses = st.number_input("Año del diagnóstico (year_of_diagnosis.diagnoses)", step=1)
-        year_of_birth_demographic = st.number_input("Año de nacimiento (year_of_birth.demographic)", step=1)
-        age_at_index_demographic = st.number_input("Edad al recoger la muestra (age_at_index.demographic)", step=1)
+        year_of_diagnosis_diagnoses = st.number_input("Año del diagnóstico.", step=1)
+        year_of_birth_demographic = st.number_input("Año de nacimiento.", step=1)
+        age_at_index_demographic = st.number_input("Edad al recoger la muestra.", step=1)
         fecha_nacimiento = st.date_input(
-            "Fecha de nacimiento del paciente",
+            "Fecha de nacimiento del paciente.",
             value=datetime.date(2000, 1, 1),
             min_value=datetime.date(1910, 1, 1),
             max_value=datetime.date.today()
@@ -429,7 +430,7 @@ def formulario_paciente(nombre):
         apoyo_valor = "Sí" if suma_apoyo >= 32 else "No"
         apoyo_cod = encoders["apoyo"].transform([apoyo_valor])[0]
 
-        st.form_submit_button("Guardar respuestas")
+        st.form_submit_button("Guardar")  # Botón invisible sin funcionalidad
 
         return {
                 # Categóricas codificadas
@@ -491,7 +492,7 @@ with tab2:
     datos_p2 = formulario_paciente("paciente2")
 
 # Comparar si ambos existen
-if st.button("Predecir riesgo emocional"):
+if st.button("Evaluar"):
     columnas_modelo = joblib.load("Outputs/data_emo/columnas_modelo.pkl")
     
     df = pd.DataFrame([datos_p1, datos_p2])
