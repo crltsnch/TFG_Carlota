@@ -425,6 +425,25 @@ def formulario_paciente(nombre):
 
         st.form_submit_button("Guardar")  # Botón invisible sin funcionalidad
 
+        # === Botón para resetear formulario ===
+        if st.button("Reestablecer valores"):
+            for key in list(st.session_state.keys()):
+                if key.startswith("apoyo_") or key in [
+                    "enviado", "responsabilidad", "neuroticismo", "extraversion", "amabilidad", "apertura",
+                    "ansiedad", "depresion", "estres", "alcohol", "fuma_actual", "fue_fumador",
+                    "alcohol_problema", "drogas_pasado", "drogas_ahora", "drogas_problema",
+                    "ejercicio", "alimentacion", "disease_type", "primary_site", "gender_demographic",
+                    "tissue_or_organ_of_origin_diagnoses", "primary_diagnosis_diagnoses", "prior_treatment_diagnoses",
+                    "site_of_resection_or_biopsy_diagnoses", "treatment_type_treatments_diagnoses",
+                    "treatment_or_therapy_treatments_diagnoses", "tumor_descriptor_samples",
+                    "sample_type_samples", "tissue_type_samples", "tipo_cancer_TCGA", "tipo_cancer_general",
+                    "morphology_diagnoses", "year_of_diagnosis_diagnoses", "age_at_diagnosis_diagnoses",
+                    "year_of_birth_demographic", "days_to_birth_demographic", "age_at_index_demographic",
+                    "days_to_diagnosis_diagnoses"
+                ]:
+                    del st.session_state[key]
+            st.rerun()
+
         return {
                 # Categóricas codificadas
                 "disease_type": encoders["disease_type"].transform([disease_type])[0],
@@ -513,24 +532,7 @@ if st.button("Evaluar"):
 
 
 
-# === Botón para resetear formulario ===
-if st.button("Resetear todo el formulario"):
-    for key in list(st.session_state.keys()):
-        if key.startswith("apoyo_") or key in [
-            "enviado", "responsabilidad", "neuroticismo", "extraversion", "amabilidad", "apertura",
-            "ansiedad", "depresion", "estres", "alcohol", "fuma_actual", "fue_fumador",
-            "alcohol_problema", "drogas_pasado", "drogas_ahora", "drogas_problema",
-            "ejercicio", "alimentacion", "disease_type", "primary_site", "gender_demographic",
-            "tissue_or_organ_of_origin_diagnoses", "primary_diagnosis_diagnoses", "prior_treatment_diagnoses",
-            "site_of_resection_or_biopsy_diagnoses", "treatment_type_treatments_diagnoses",
-            "treatment_or_therapy_treatments_diagnoses", "tumor_descriptor_samples",
-            "sample_type_samples", "tissue_type_samples", "tipo_cancer_TCGA", "tipo_cancer_general",
-            "morphology_diagnoses", "year_of_diagnosis_diagnoses", "age_at_diagnosis_diagnoses",
-            "year_of_birth_demographic", "days_to_birth_demographic", "age_at_index_demographic",
-            "days_to_diagnosis_diagnoses"
-        ]:
-            del st.session_state[key]
-    st.rerun()
+
 
 
 # # === Procesamiento y predicción ===
