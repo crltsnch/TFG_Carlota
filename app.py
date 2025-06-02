@@ -413,7 +413,7 @@ def formulario_paciente(nombre):
 
 
         # Calcular diferencia en días
-        fecha_actual = datetime.date(2007, 5, 31)
+        fecha_actual = datetime.date.today()
 
         dias_diagnostico = (fecha_actual - fecha_nacimiento).days
 
