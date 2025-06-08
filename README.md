@@ -36,7 +36,7 @@ TFG_Carlota/
 ├── 04_eval_model_emo.ipynb        # Evaluación de resultados emocionales
 ├── app.py                         # App Streamlit
 └── requirements.txt               # Dependencias del proyecto
-
+```
 
 
 ## Descripción del proyecto
