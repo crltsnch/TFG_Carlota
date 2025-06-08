@@ -4,43 +4,39 @@ Este repositorio contiene el desarrollo completo del Trabajo de Fin de Grado de 
 
 ## Estructura del repositorio
 
+```text
 TFG_Carlota/
-│
-├── datalake/ # Datos originales sin procesar
-├── datawarehouse/ # Datos agrupados tras una limpieza inicial
-├── dataframe/ # Datos derivados y organizados para modelado
-│ ├── cosas.csv
-│ ├── data_emocional.csv
-│ ├── data_riesgo_clinico.csv
-│ ├── datos_limpios.csv
-│ └── datos_limpios_sin_encoder.csv
-│
-├── outputs/ # Salidas del preprocesamiento y modelado
-│ ├── data_clin/
-│ ├── data_emo/
-│ ├── encoder/
-│ ├── encoder_emo/
-│ ├── models_clin/
-│ └── models_emo/
-│
-├── Procesamiento/ # Cuadernos de exploración y preparación
-│ ├── Exploracion.ipynb
-│ ├── Exploracion_Avanzada.ipynb
-│ ├── Extract.ipynb
-│ ├── Preparacion_Inicial.ipynb
-│ └── Transformacion.ipynb
-│
+├── datalake/                      # Datos originales sin procesar
+├── datawarehouse/                 # Datos agrupados tras limpieza inicial
+├── dataframe/                     # Datos derivados y organizados para modelado
+│   ├── cosas.csv
+│   ├── data_emocional.csv
+│   ├── data_riesgo_clinico.csv
+│   ├── datos_limpios.csv
+│   └── datos_limpios_sin_encoder.csv
+├── outputs/                       # Resultados del preprocesamiento y modelado
+│   ├── data_clin/
+│   ├── data_emo/
+│   ├── encoder/
+│   ├── encoder_emo/
+│   ├── models_clin/
+│   └── models_emo/
+├── Procesamiento/                # Cuadernos de exploración y preparación
+│   ├── Exploracion.ipynb
+│   ├── Exploracion_Avanzada.ipynb
+│   ├── Extract.ipynb
+│   ├── Preparacion_Inicial.ipynb
+│   └── Transformacion.ipynb
 ├── Utilidades/
-│ ├── columnas_bool.csv
-│ └── diccionario_valores.ipynb
-│
-├── 01_modelo_clinic.ipynb # Entrenamiento modelo clínico
-├── 02_create_data_emo.ipynb # Generación variables emocionales
-├── 03_modelos_emo.ipynb # Modelado emocional
-├── 04_eval_model_emo.ipynb # Evaluación visual de resultados
-├── app.py # Creación app
-│
-└── requirements.txt # Dependencias del proyecto
+│   ├── columnas_bool.csv
+│   └── diccionario_valores.ipynb
+├── 01_modelo_clinic.ipynb         # Entrenamiento modelo clínico
+├── 02_create_data_emo.ipynb       # Generación variables emocionales
+├── 03_modelos_emo.ipynb           # Modelado emocional
+├── 04_eval_model_emo.ipynb        # Evaluación de resultados emocionales
+├── app.py                         # App Streamlit
+└── requirements.txt               # Dependencias del proyecto
+
 
 
 ## Descripción del proyecto
